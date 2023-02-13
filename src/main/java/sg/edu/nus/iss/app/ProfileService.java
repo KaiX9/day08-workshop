@@ -20,14 +20,11 @@ public class ProfileService {
 
     public void readFile() throws FileNotFoundException, IOException {
 
-        File file = new File(dirFileName);
-        FileReader fr = new FileReader(file);
-        BufferedReader br = new BufferedReader(fr);
+        BufferedReader br = new BufferedReader(new FileReader(new File(dirFileName)));
 
         String line = "";
         Map<String, Integer> buffer = new HashMap<String, Integer>();
         // int occurence = 0;
-        String[] array;
 
         // Scanner scanner = new Scanner(System.in);
         // System.out.println("Enter the word to search: ");
@@ -36,16 +33,18 @@ public class ProfileService {
         while((line = br.readLine()) != null) {
             line = line.replace(',', ' ');
             line = line.replace('.', ' ');
-            array = line.toLowerCase().split(" ");
+            String[] array = line.toLowerCase().split(" ");
             
-            
-            //} else {
                 for (int x = 0; x < array.length; x++) {
+                    String t = array[x].trim();
+                    if (t.length() <= 0) {
+                        continue;
+                    }
                     Integer count = buffer.get(array[x]);
                     if (count == null) {
-                        buffer.put(array[x].trim(), 1);
+                        buffer.put(array[x], 1);
                     } else {
-                        buffer.put(array[x].trim(), count + 1);
+                        buffer.put(array[x], count + 1);
                         
                     }
                 }
@@ -70,6 +69,5 @@ public class ProfileService {
         // }
 
         br.close();
-        fr.close();
     }
 }

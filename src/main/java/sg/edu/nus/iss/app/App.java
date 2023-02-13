@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +47,7 @@ public final class App {
         Console con = System.console();
         String conInput = "";
 
-        IdiomService idiomSvc = new IdiomService();
+        IdiomService idiomSvc = new IdiomService(null, conInput);
         List<String> idioms = null;
 
         ProfileService ps = new ProfileService();
@@ -83,7 +85,16 @@ public final class App {
             }
         }
 
+        ServerSocket server = new ServerSocket(12345);
+        Socket socket = server.accept();
+        System.out.println("Server listening on socket port " + socket.getPort());
+        System.out.println("Server started at ... " + socket.getLocalSocketAddress().toString());
+
+        Thread IdiomThread = new Thread(new IdiomService(socket, dirFileName));
+        IdiomThread.start();
+
     }
+
 
     public static void CSVExample() throws IOException {
         try {
